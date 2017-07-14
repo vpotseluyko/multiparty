@@ -45,7 +45,8 @@ var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 // replace base64 characters with safe-for-filename characters
 var b64Safe = {'/': '_', '+': '-'};
 
-exports.Form = Form;
+module.exports.Form = Form;
+module.exports.Expect = expect;
 
 util.inherits(Form, stream.Writable);
 function Form(options) {
@@ -824,7 +825,7 @@ function createError(status, message) {
 }
 
 
-Form.prototype.expect = function (req, res, next) {
+function expect () {
     return function (req, res, next) {
         const form = new Form();
         form.parse(req, function (err, res) {
@@ -843,4 +844,4 @@ Form.prototype.expect = function (req, res, next) {
         });
 
     };
-};
+}
