@@ -88,6 +88,7 @@ function Form(options) {
     });
 }
 
+
 Form.prototype.parse = function (req, cb) {
     var called = false;
     var self = this;
@@ -821,3 +822,25 @@ function createError(status, message) {
     error.statusCode = status;
     return error;
 }
+
+
+Form.prototype.expect = function (req, res, next) {
+    return function (req, res, next) {
+        const form = new Form();
+        form.parse(req, function (err, res) {
+            if (err) {
+                next(err);
+            } else {
+                req.fields = {};
+                array.forEach(function () {
+                    if (typeof fields[item] === "undefined") {
+                        next(new Error("Обязательное поле пустое"));
+                    }
+                    req.fields[item] = fields[item];
+                });
+                next();
+            }
+        });
+
+    };
+};
