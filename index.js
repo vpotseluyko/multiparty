@@ -828,12 +828,12 @@ function createError(status, message) {
 function expect (array) {
     return function (req, res, next) {
         const form = new Form();
-        form.parse(req, function (err, res) {
+        form.parse(req, function (err, fields) {
             if (err) {
                 next(err);
             } else {
                 req.fields = {};
-                array.forEach(function () {
+                array.forEach(function (item) {
                     if (typeof fields[item] === "undefined") {
                         next(new Error("Обязательное поле пустое"));
                     }
