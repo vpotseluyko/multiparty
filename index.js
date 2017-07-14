@@ -825,7 +825,7 @@ function createError(status, message) {
 }
 
 
-function expect () {
+function expect (array) {
     return function (req, res, next) {
         const form = new Form();
         form.parse(req, function (err, res) {
