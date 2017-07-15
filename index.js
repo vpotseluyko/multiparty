@@ -827,22 +827,22 @@ function createError(status, message) {
 function expect(array) {
     return function (req, res, next) {
         const form = new Form();
-        try {
-            form.parse(req, function (err, fields) {
-                if (err) {
-                    throw err;
-                }
-                req.fields = {};
+        form.parse(req, function (err, fields) {
+            if (err) {
+                throw err;
+            }
+            req.fields = {};
+            try {
                 array.forEach(function (item) {
                     if (typeof fields[item] === "undefined") {
                         throw new Error("Required field " + item + " is empty");
                     }
                     req.fields[item] = fields[item];
                 });
-                next();
-            });
-        } catch (err) {
-            next(err);
-        }
+            } catch (err) {
+                next(err);
+            }
+            next();
+        });
     };
 }
