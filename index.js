@@ -839,10 +839,10 @@ function expect(array) {
                     }
                     req.fields[item] = fields[item];
                 });
+                next();
             } catch (err) {
                 next(err);
             }
-            next();
         });
     };
 }
