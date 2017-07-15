@@ -835,7 +835,7 @@ function expect(array) {
                 req.fields = {};
                 array.forEach(function (item) {
                     if (typeof fields[item] === "undefined") {
-                        throw new Error("Обязательное поле пустое");
+                        throw new Error("Required field " + item + " is empty");
                     }
                     req.fields[item] = fields[item];
                 });
