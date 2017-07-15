@@ -45,9 +45,8 @@ var LAST_BOUNDARY_SUFFIX_LEN = 4; // --\r\n
 // replace base64 characters with safe-for-filename characters
 var b64Safe = {'/': '_', '+': '-'};
 
-module.exports.Form = Form;
-module.exports.Expect = expect;
-
+module.exports = Form;
+module.exports.expect = expect;
 util.inherits(Form, stream.Writable);
 function Form(options) {
     var self = this;
@@ -825,23 +824,25 @@ function createError(status, message) {
 }
 
 
-function expect (array) {
+function expect(array) {
     return function (req, res, next) {
         const form = new Form();
-        form.parse(req, function (err, fields) {
-            if (err) {
-                next(err);
-            } else {
+        try {
+            form.parse(req, function (err, fields) {
+                if (err) {
+                    throw err;
+                }
                 req.fields = {};
                 array.forEach(function (item) {
                     if (typeof fields[item] === "undefined") {
-                        next(new Error("Обязательное поле пустое"));
+                        throw new Error("Обязательное поле пустое");
                     }
                     req.fields[item] = fields[item];
                 });
                 next();
-            }
-        });
-
+            });
+        } catch (err) {
+            next(err);
+        }
     };
 }
