@@ -824,7 +824,10 @@ function createError(status, message) {
 }
 
 
-function expect(array) {
+function expect(array, arrayUnneeded) {
+    if (typeof arrayUnneeded === 'undefined') {
+        arrayUnneeded = [];
+    }
     return function (req, res, next) {
         const form = new Form();
         form.parse(req, function (err, fields) {
@@ -838,6 +841,11 @@ function expect(array) {
                         throw new Error("Required field " + item + " is empty");
                     }
                     req.fields[item] = fields[item];
+                });
+                arrayUnneeded.forEach(function (t) {
+                    if (typeof fields[t] !== "undefined") {
+                        req.fields[t] = fields[t];
+                    }
                 });
                 next();
             } catch (err) {
